@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101827">
+    <title>MySchool Assistant</title>
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" href="./icon.svg" type="image/svg+xml">
+    <style>
+        :root {
+            --bg: #101827;
+            --panel: #192538;
+            --panel2: #202f45;
+            --text: #f4f7fb;
+            --muted: #9baac0;
+            --accent: #8b7cff;
+            --green: #48d6a0;
+            --red: #ff7185;
+            --border: #30415a;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        <script>if ("serviceWorker" in navigator) {
+            window.addEventListener("load", ()=> {
+                    navigator.serviceWorker.register("./sw.js") .then(()=> console.log("MySchool PWA ready!")) .catch(error=> console.error("PWA error:", error));
+                });
+        }
+
+        </script>body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Inter, Arial, sans-serif
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit
+        }
+
+        button {
+            cursor: pointer
+        }
+
+        .app {
+            max-width: 1250px;
+            margin: auto;
+            padding: 24px
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 28px
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .logo-icon {
+            background: var(--accent);
+            width: 45px;
+            height: 45px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            font-size: 23px
+        }
+
+        h1 {
+            font-size: 21px;
+            margin: 0
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 4px
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        nav {
+            display: flex;
+            gap: 8px;
+            overflow: auto;
+            margin-bottom: 25px;
+            padding-bottom: 5px
+        }
+
+        nav button {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            padding: 12px 17px;
+            border-radius: 12px;
+            white-space: nowrap
+        }
+
+        nav button.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent)
+        }
+
+        h2 {
+            font-size: 23px;
+            margin: 0 0 7px
+        }
+
+        h3 {
+            font-size: 16px;
+            margin: 0 0 15px
+        }
+
+        .page-desc {
+            color: var(--muted);
+            margin: 0 0 22px;
+            font-size: 14px
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 15px
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 19px;
+            border-radius: 17px;
+            margin-bottom: 15px;
+            min-width: 0
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .stat-value {
+            font-size: 30px;
+            font-weight: 750;
+            margin: 10px 0 4px
+        }
+
+        .stat-note {
+            color: var(--muted);
+            font-size: 12px
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            margin-bottom: 13px;
+            min-width: 0
+        }
+
+        label {
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            background: #111d2e;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            color: white;
+            outline: none
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--accent)
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 85px
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 10px;
+            padding: 11px 15px;
+            background: var(--accent);
+            color: white;
+            font-weight: 600
+        }
+
+        .btn.secondary {
+            background: var(--panel2);
+            border: 1px solid var(--border)
+        }
+
+        .btn.danger {
+            background: #542938;
+            color: #ffb0bd
+        }
+
+        .btn.small {
+            padding: 8px 10px;
+            font-size: 12px
+        }
+
+        .btn:disabled {
+            opacity: .5;
+            cursor: not-allowed
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px
+        }
+
+        .subject-item,
+        .grade-item {
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border)
+        }
+
+        .subject-item:last-child,
+        .grade-item:last-child {
+            border-bottom: 0
+        }
+
+        .pill {
+            font-size: 11px;
+            padding: 5px 9px;
+            border-radius: 20px;
+            background: var(--panel2);
+            color: var(--muted)
+        }
+
+        .good {
+            color: var(--green)
+        }
+
+        .bad {
+            color: var(--red)
+        }
+
+        .progress {
+            height: 7px;
+            background: #30415a;
+            border-radius: 10px;
+            margin-top: 12px;
+            overflow: hidden
+        }
+
+        .progress span {
+            display: block;
+            height: 100%;
+            background: var(--accent);
+            border-radius: 10px
+        }
+
+        .empty {
+            color: var(--muted);
+            text-align: center;
+            padding: 25px 10px;
+            font-size: 14px
+        }
+
+        .actions {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap
+        }
+
+        .hidden {
+            display: none !important
+        }
+
+        .result {
+            background: #111d2e;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 12px;
+            line-height: 1.6
+        }
+
+        .tip {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5
+        }
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            padding: 25px
+        }
+
+        @media(max-width:760px) {
+            .app {
+                padding: 16px
+            }
+
+            .grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr))
+            }
+
+            header {
+                align-items: flex-start
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        @media(max-width:440px) {
+            .grid {
+                grid-template-columns: 1fr
+            }
+
+            .header-actions {
+                max-width: 125px
+            }
+
+            .stat-value {
+                font-size: 26px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">🎓</div>
+                <div>
+                    <h1>MySchool Assistant</h1>
+                    <div class="subtitle">Your personal school companion</div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn secondary small" onclick="exportData()">↓ Backup</button>
+                <button class="btn secondary small" onclick="document.getElementById('importFile').click()">↑
+                    Import</button>
+                <input id="importFile" type="file" accept=".json,application/json" hidden onchange="importData(event)">
+            </div>
+        </header>
+
+        <nav>
+            <button class="active" data-page="dashboard">Dashboard</button>
+            <button data-page="subjects">My Subjects</button>
+            <button data-page="grades">Grades</button>
+            <button data-page="recovery">Recovery Plan</button>
+            <button data-page="assistant">Study Assistant</button>
+        </nav>
+
+        <main>
+            <section id="dashboard" class="page">
+                <h2>Dashboard</h2>
+                <p class="page-desc">Your school progress at a glance.</p>
+                <div class="grid">
+                    <div class="card">
+                        <div class="stat-label">Total subjects</div>
+                        <div class="stat-value" id="totalSubjects">0</div>
+                        <div class="stat-note">Subjects registered</div>
+                    </div>
+                    <div class="card">
+                        <div class="stat-label">Subjects to recover</div>
+                        <div class="stat-value bad" id="recoverCount">0</div>
+                        <div class="stat-note">Average below 6</div>
+                    </div>
+                    <div class="card">
+                        <div class="stat-label">Grades entered</div>
+                        <div class="stat-value" id="totalGrades">0</div>
+                        <div class="stat-note">All your assessments</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Subject performance</h3>
+                    <div id="dashboardSubjects"></div>
+                </div>
+                <div class="card">
+                    <h3>Recovery priorities</h3>
+                    <div id="dashboardRecovery"></div>
+                </div>
+            </section>
+
+            <section id="subjects" class="page hidden">
+                <h2>My Subjects</h2>
+                <p class="page-desc">Add and manage your school subjects.</p>
+                <div class="card">
+                    <h3>Add a subject</h3>
+                    <div class="form-grid">
+                        <div class="field"><label>Subject name</label><input id="subjectName"
+                                placeholder="e.g. Mathematics"></div>
+                        <div class="field"><label>Teacher (optional)</label><input id="subjectTeacher"
+                                placeholder="Teacher name"></div>
+                    </div>
+                    <button class="btn" onclick="addSubject()">+ Add subject</button>
+                </div>
+                <div class="card">
+                    <h3>Your subjects</h3>
+                    <div id="subjectList"></div>
+                </div>
+            </section>
+
+            <section id="grades" class="page hidden">
+                <h2>Grades</h2>
+                <p class="page-desc">Record every grade and its weight.</p>
+                <div class="card">
+                    <h3>Add a grade</h3>
+                    <div class="form-grid">
+                        <div class="field"><label>Subject</label><select id="gradeSubject"></select></div>
+                        <div class="field"><label>Grade (0–10)</label><input id="gradeValue" type="number" min="0"
+                                max="10" step="0.25" placeholder="e.g. 7"></div>
+                        <div class="field"><label>Weight</label><select id="gradeWeight">
+                                <option value="1">1 - Normal</option>
+                                <option value="1.5">1.5 - Medium</option>
+                                <option value="2">2 - Important</option>
+                                <option value="0.5">0.5 - Small</option>
+                            </select></div>
+                        <div class="field"><label>Date</label><input id="gradeDate" type="date"></div>
+                    </div>
+                    <div class="field"><label>Note (optional)</label><input id="gradeNote"
+                            placeholder="e.g. Written test, oral exam"></div>
+                    <button class="btn" onclick="addGrade()">+ Save grade</button>
+                </div>
+                <div class="card">
+                    <div class="row">
+                        <h3>All grades</h3><select id="gradeFilter" style="max-width:180px" onchange="renderGrades()">
+                            <option value="all">All subjects</option>
+                        </select>
+                    </div>
+                    <div id="gradeList"></div>
+                </div>
+            </section>
+
+            <section id="recovery" class="page hidden">
+                <h2>Recovery Plan</h2>
+                <p class="page-desc">Understand what you need to do to reach an average of 6.</p>
+                <div class="card">
+                    <h3>Calculate your next grade</h3>
+                    <div class="field"><label>Choose a subject</label><select id="recoverySubject"
+                            onchange="calculateRecovery()"></select></div>
+                    <div class="field"><label>Number of future grades (each with weight 1)</label><select
+                            id="futureCount" onchange="calculateRecovery()">
+                            <option value="1">1 grade</option>
+                            <option value="2">2 grades</option>
+                            <option value="3">3 grades</option>
+                            <option value="4">4 grades</option>
+                            <option value="5">5 grades</option>
+                        </select></div>
+                    <div id="recoveryResult" class="result">Add a subject and some grades to start.</div>
+                    <p class="tip">Calculation assumes all future grades have weight 1 and the target average is 6. Your
+                        teacher may use different rules.</p>
+                </div>
+                <div class="card">
+                    <h3>Subjects that need attention</h3>
+                    <div id="recoveryList"></div>
+                </div>
+            </section>
+
+            <section id="assistant" class="page hidden">
+                <h2>Study Assistant</h2>
+                <p class="page-desc">Get a practical study suggestion for each subject.</p>
+                <div class="card">
+                    <h3>Your study priorities</h3>
+                    <div id="studySuggestions"></div>
+                </div>
+                <div class="card">
+                    <h3>Create a study plan</h3>
+                    <div class="field"><label>Choose a subject</label><select id="studySubject"></select></div>
+                    <div class="field"><label>How much time do you have?</label><select id="studyTime">
+                            <option value="20">20 minutes</option>
+                            <option value="30">30 minutes</option>
+                            <option value="45">45 minutes</option>
+                            <option value="60">1 hour</option>
+                            <option value="90">1 hour 30 minutes</option>
+                        </select></div>
+                    <button class="btn" onclick="makeStudyPlan()">Create my plan</button>
+                    <div id="studyPlan" class="result hidden"></div>
+                </div>
+            </section>
+        </main>
+        <footer>MySchool Assistant · Your progress, your way.</footer>
+    </div>
+
+    <script>
+        const KEY = "myschool_assistant_v2";
+        let data = { subjects: [], grades: [] };
+
+        function save() {
+            localStorage.setItem(KEY, JSON.stringify(data));
+            renderAll();
+        }
+        function load() {
+            try {
+                const saved = localStorage.getItem(KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (Array.isArray(parsed.subjects) && Array.isArray(parsed.grades)) data = parsed;
+                }
+            } catch (e) { console.error("Could not load saved data", e); }
+            renderAll();
+        }
+        function id() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7) }
+        function escapeHTML(value) {
+            return String(value ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+        }
+        function subjectName(subjectId) {
+            return data.subjects.find(s => s.id === subjectId)?.name || "Unknown subject";
+        }
+        function gradesFor(subjectId) {
+            return data.grades.filter(g => g.subjectId === subjectId);
+        }
+        function stats(subjectId) {
+            const grades = gradesFor(subjectId);
+            const weight = grades.reduce((a, g) => a + Number(g.weight), 0);
+            const total = grades.reduce((a, g) => a + Number(g.value) * Number(g.weight), 0);
+            return { average: weight ? total / weight : null, weight, total, count: grades.length };
+        }
+        function fmt(n) { return Number(n).toFixed(2).replace(/\.00$/, "") }
+        function averageLabel(s) { return s.average === null ? "No grades" : fmt(s.average) }
+        function addSubject() {
+            const name = document.getElementById("subjectName").value.trim();
+            const teacher = document.getElementById("subjectTeacher").value.trim();
+            if (!name) return alert("Enter a subject name.");
+            if (data.subjects.some(s => s.name.toLowerCase() === name.toLowerCase())) return alert("This subject already exists.");
+            data.subjects.push({ id: id(), name, teacher });
+            document.getElementById("subjectName").value = "";
+            document.getElementById("subjectTeacher").value = "";
+            save();
+        }
+        function deleteSubject(subjectId) {
+            if (!confirm("Delete this subject and all its grades?")) return;
+            data.subjects = data.subjects.filter(s => s.id !== subjectId);
+            data.grades = data.grades.filter(g => g.subjectId !== subjectId);
+            save();
+        }
+        function renameSubject(subjectId) {
+            const s = data.subjects.find(x => x.id === subjectId);
+            const name = prompt("New subject name:", s.name);
+            if (name && name.trim()) { s.name = name.trim(); save(); }
+        }
+        function addGrade() {
+            const subjectId = document.getElementById("gradeSubject").value;
+            const value = Number(document.getElementById("gradeValue").value);
+            const weight = Number(document.getElementById("gradeWeight").value);
+            const date = document.getElementById("gradeDate").value || new Date().toISOString().slice(0, 10);
+            const note = document.getElementById("gradeNote").value.trim();
+            if (!subjectId) return alert("Add a subject first.");
+            if (document.getElementById("gradeValue").value === "" || !Number.isFinite(value) || value < 0 || value > 10) return alert("Enter a grade between 0 and 10.");
+            data.grades.push({ id: id(), subjectId, value, weight, date, note });
+            document.getElementById("gradeValue").value = "";
+            document.getElementById("gradeNote").value = "";
+            save();
+        }
+        function deleteGrade(gradeId) {
+            if (!confirm("Delete this grade?")) return;
+            data.grades = data.grades.filter(g => g.id !== gradeId);
+            save();
+        }
+        function editGrade(gradeId) {
+            const g = data.grades.find(x => x.id === gradeId);
+            const value = prompt("New grade (0–10):", g.value);
+            if (value === null) return;
+            const n = Number(value);
+            if (!Number.isFinite(n) || n < 0 || n > 10) return alert("Invalid grade.");
+            g.value = n;
+            save();
+        }
+        function optionsHTML(selected) {
+            return data.subjects.map(s => `<option value="${s.id}" ${s.id === selected ? "selected" : ""}>${escapeHTML(s.name)}</option>`).join("");
+        }
+        function setSelect(idName, selected) {
+            const el = document.getElementById(idName);
+            const old = selected || el.value;
+            el.innerHTML = optionsHTML(old);
+            if (!data.subjects.length) el.innerHTML = '<option value="">Add a subject first</option>';
+        }
+        function renderSubjects() {
+            const el = document.getElementById("subjectList");
+            if (!data.subjects.length) { el.innerHTML = '<div class="empty">No subjects yet. Add your first subject above.</div>'; return; }
+            el.innerHTML = data.subjects.map(s => {
+                const st = stats(s.id);
+                return `<div class="subject-item row"><div><b>${escapeHTML(s.name)}</b><div class="tip">${escapeHTML(s.teacher || "No teacher added")} · ${st.count} grades · Average: ${averageLabel(st)}</div></div><div class="actions"><button class="btn secondary small" onclick="renameSubject('${s.id}')">Edit</button><button class="btn danger small" onclick="deleteSubject('${s.id}')">Delete</button></div></div>`;
+            }).join("");
+        }
+        function renderGrades() {
+            const filter = document.getElementById("gradeFilter").value;
+            const list = data.grades.filter(g => filter === "all" || g.subjectId === filter).slice().sort((a, b) => b.date.localeCompare(a.date));
+            const el = document.getElementById("gradeList");
+            if (!list.length) { el.innerHTML = '<div class="empty">No grades recorded yet.</div>'; return; }
+            el.innerHTML = list.map(g => `<div class="grade-item row"><div><b>${escapeHTML(subjectName(g.subjectId))}</b><div class="tip">${escapeHTML(g.date)} · Weight ${g.weight}${g.note ? " · " + escapeHTML(g.note) : ""}</div></div><div class="row"><strong class="${g.value >= 6 ? "good" : "bad"}">${fmt(g.value)}</strong><div class="actions"><button class="btn secondary small" onclick="editGrade('${g.id}')">Edit</button><button class="btn danger small" onclick="deleteGrade('${g.id}')">×</button></div></div></div>`).join("");
+        }
+        function renderDashboard() {
+            document.getElementById("totalSubjects").textContent = data.subjects.length;
+            document.getElementById("totalGrades").textContent = data.grades.length;
+            const recovery = data.subjects.filter(s => stats(s.id).average !== null && stats(s.id).average < 6);
+            document.getElementById("recoverCount").textContent = recovery.length;
+            const list = document.getElementById("dashboardSubjects");
+            if (!data.subjects.length) { list.innerHTML = '<div class="empty">Add your subjects to see your progress.</div>'; }
+            else list.innerHTML = data.subjects.map(s => {
+                const st = stats(s.id), v = st.average;
+                const width = v === null ? 0 : Math.max(0, Math.min(100, v * 10));
+                return `<div class="subject-item"><div class="row"><b>${escapeHTML(s.name)}</b><strong class="${v === null ? "" : v >= 6 ? "good" : "bad"}">${averageLabel(st)}</strong></div><div class="progress"><span style="width:${width}%"></span></div></div>`;
+            }).join("");
+            document.getElementById("dashboardRecovery").innerHTML = recovery.length ? recovery.map(s => `<div class="subject-item row"><span>${escapeHTML(s.name)}</span><b class="bad">${fmt(stats(s.id).average)} / 6</b></div>`).join("") : '<div class="empty">Great! No subjects currently below 6, or no grades entered.</div>';
+        }
+        function calculateRecovery() {
+            const subjectId = document.getElementById("recoverySubject").value;
+            const count = Number(document.getElementById("futureCount").value);
+            const el = document.getElementById("recoveryResult");
+            if (!subjectId) { el.textContent = "Add a subject and some grades to start."; return; }
+            const s = stats(subjectId);
+            if (!s.count) { el.textContent = "Enter at least one grade for this subject."; return; }
+            const needed = (6 * (s.weight + count) - s.total) / count;
+            if (s.average >= 6) {
+                el.innerHTML = `Current average: <b class="good">${fmt(s.average)}</b><br>You have already reached the target of 6. Keep it up!`;
+            } else if (needed > 10) {
+                el.innerHTML = `Current average: <b class="bad">${fmt(s.average)}</b><br>You would need an average of <b>${fmt(needed)}</b> across the next ${count} grades. That is above 10, so you need more assessments or a different recovery strategy.`;
+            } else if (needed <= 0) {
+                el.innerHTML = `You need an average of <b class="good">0</b> across the next ${count} grades to remain at 6 or above.`;
+            } else {
+                el.innerHTML = `Current average: <b class="bad">${fmt(s.average)}</b><br>To reach 6, aim for an average of <b class="good">${fmt(needed)}</b> across your next ${count} grades.<br><span class="tip">This is a mathematical estimate, not a guarantee of your teacher's final grade.</span>`;
+            }
+        }
+        function renderRecovery() {
+            const el = document.getElementById("recoveryList");
+            const low = data.subjects.filter(s => stats(s.id).average !== null && stats(s.id).average < 6).sort((a, b) => stats(a.id).average - stats(b.id).average);
+            el.innerHTML = low.length ? low.map(s => `<div class="subject-item row"><span>${escapeHTML(s.name)}</span><b class="bad">${fmt(stats(s.id).average)}</b></div>`).join("") : '<div class="empty">No recovery subjects yet. Add grades to calculate your averages.</div>';
+            calculateRecovery();
+        }
+        function renderSuggestions() {
+            const el = document.getElementById("studySuggestions");
+            if (!data.subjects.length) { el.innerHTML = '<div class="empty">Add subjects to receive study suggestions.</div>'; return; }
+            el.innerHTML = data.subjects.map(s => {
+                const a = stats(s.id).average;
+                let msg = a === null ? "Inserisci i tuoi voti per valutare la priorità." : a < 6 ? "Priorità alta: ripassa gli argomenti non chiari, poi fai esercizi e verifica gli errori." : a < 7 ? "Priorità media: consolida gli argomenti con esercizi e ripetizione attiva." : "Continua così: mantieni la preparazione con brevi ripassi e simulazioni.";
+                return `<div class="subject-item"><div class="row"><b>${escapeHTML(s.name)}</b><span class="pill">${a === null ? "No grades" : a < 6 ? "High priority" : a < 7 ? "Medium priority" : "On track"}</span></div><div class="tip" style="margin-top:7px">${msg}</div></div>`;
+            }).join("");
+        }
+        function makeStudyPlan() {
+            const subjectId = document.getElementById("studySubject").value;
+            const mins = Number(document.getElementById("studyTime").value);
+            const el = document.getElementById("studyPlan");
+            if (!subjectId) { alert("Add a subject first."); return; }
+            const a = stats(subjectId).average;
+            const first = Math.round(mins * .4), second = Math.round(mins * .4), last = mins - first - second;
+            el.classList.remove("hidden");
+            el.innerHTML = `<b>Piano di studio: ${escapeHTML(subjectName(subjectId))}</b><br><br>1. ${first} min — Ripassa la teoria e individua i concetti principali.<br>2. ${second} min — Fai esercizi o rispondi a domande senza guardare gli appunti.<br>3. ${last} min — Correggi gli errori e ripeti ciò che non ricordi.<br><br><b>Consiglio:</b> ${a !== null && a < 6 ? "Concentrati prima sugli argomenti che ti hanno creato più difficoltà." : "Prova a spiegare l'argomento con parole tue, come in un'interrogazione."}`;
+        }
+        function renderAll() {
+            setSelect("gradeSubject");
+            setSelect("recoverySubject");
+            setSelect("studySubject");
+            const filter = document.getElementById("gradeFilter");
+            const old = filter.value;
+            filter.innerHTML = '<option value="all">All subjects</option>' + optionsHTML(old);
+            renderSubjects();
+            renderGrades();
+            renderDashboard();
+            renderRecovery();
+            renderSuggestions();
+        }
+        function exportData() {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url; a.download = "myschool-assistant-backup.json"; a.click();
+            URL.revokeObjectURL(url);
+        }
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+                try {
+                    const parsed = JSON.parse(reader.result);
+                    if (!Array.isArray(parsed.subjects) || !Array.isArray(parsed.grades)) throw new Error("Invalid backup");
+                    if (!confirm("Import this backup? It will replace the data currently saved in this browser.")) return;
+                    data = parsed;
+                    save();
+                    alert("Backup imported successfully!");
+                } catch (e) { alert("This file is not a valid MySchool Assistant backup."); }
+                event.target.value = "";
+            };
+            reader.readAsText(file);
+        }
+        document.querySelectorAll("nav button").forEach(btn => {
+            btn.addEventListener("click", () => {
+                document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
+                document.querySelectorAll(".page").forEach(p => p.classList.add("hidden"));
+                btn.classList.add("active");
+                document.getElementById(btn.dataset.page).classList.remove("hidden");
+            });
+        });
+        document.getElementById("gradeDate").value = new Date().toISOString().slice(0, 10);
+        load();
+    </script>
+</body>
+
+</html>
